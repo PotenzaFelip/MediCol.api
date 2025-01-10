@@ -1,0 +1,28 @@
+
+http://localhost:8080/medico/cadastro
+
+
+
+especialidade é um Enum porra
+(
+    ORTOPEDIA,
+    CARDIOLOGIA,
+    GINEOCOLOGIA,
+    DERMATOLOGIA;
+)
+
+{
+"nome": "Rodrigo Ferreira",
+"email": "rodrigo.ferreira@voll.med",
+"crm": "123456",
+"especialidade": "ORTOPEDIA",
+"endereco": {
+    "logradouro": "rua 1",
+    "bairro": "bairro",
+    "cep": "12345678",
+    "cidade": "Brasilia",
+    "uf": "DF",
+    "numero": "1",
+    "complemento": "complemento"
+    }
+}
