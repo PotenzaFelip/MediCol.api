@@ -16,6 +16,7 @@ especialidade é um Enum porra
 "email": "rodrigo.ferreira@voll.med",
 "crm": "123456",
 "especialidade": "ORTOPEDIA",
+"telefone":"11997845723",
 "endereco": {
     "logradouro": "rua 1",
     "bairro": "bairro",

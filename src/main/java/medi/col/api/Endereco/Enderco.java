@@ -19,11 +19,18 @@ public class Enderco {
         this.numero=endereco.numero();
     }
     
+    @SuppressWarnings("unused")
     private String logradouro;
+    @SuppressWarnings("unused")
     private String bairro;
+    @SuppressWarnings("unused")
     private String cep;
+    @SuppressWarnings("unused")
     private String numero;
+    @SuppressWarnings("unused")
     private String complemento;
+    @SuppressWarnings("unused")
     private String cidade;
+    @SuppressWarnings("unused")
     private String uf;
 }
