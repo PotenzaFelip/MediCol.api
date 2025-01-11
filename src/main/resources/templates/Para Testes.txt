@@ -10,6 +10,7 @@ especialidade é um Enum
     GINEOCOLOGIA,
     DERMATOLOGIA;
 )
+Email e DRM são unique
 
 {
 "nome": "Rodrigo Ferreira",

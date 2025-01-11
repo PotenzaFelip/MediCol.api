@@ -1,9 +1,59 @@
-<!-- src/main/resources/templates/index.html -->
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <title>Exemplo de Teste</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f9;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            text-align: center;
+        }
+
+        .button {
+            padding: 20px 40px;
+            font-size: 22px;
+            background-color: #ADD8E6;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 250px;
+            height: 60px;
+            text-decoration: none; /* Remove underline from the link */
+            display: inline-block; /* Ensure buttons align properly */
+        }
+
+        .button:hover {
+            background-color: #87CEFA;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Bem-vindo à minha aplicação!</h1>
+    <div class="button-container">
+        <h1>Escolha uma opção</h1>
+        <a href="/medicos" class="button">1. Médicos</a>
+        <a href="/pacientes" class="button">2. Pacientes</a>
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="button">3. Outros</a>
+    </div>
 </body>
 </html>

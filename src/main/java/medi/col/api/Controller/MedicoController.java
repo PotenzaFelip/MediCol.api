@@ -29,8 +29,8 @@ public class MedicoController {
     
     @PostMapping("cadastro")
     @Transactional
-    @Operation(summary = "Exemplo de endpoint",
-            description = "Este é um endpoint de exemplo",
+    @Operation(summary = "CadastroMedico",
+            description = "Cadastrar medico",
             responses = {
                 @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
                 @ApiResponse(responseCode = "400", description = "Requisição inválida")
@@ -39,8 +39,8 @@ public class MedicoController {
         repository.save(new Medico(Dados));
     }
     @GetMapping("buscar")
-    @Operation(summary = "Exemplo de endpoint",
-    description = "Este é um endpoint de exemplo",
+    @Operation(summary = "GetMedicos",
+    description = "Buscar Medicos",
     responses = {
         @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida")
