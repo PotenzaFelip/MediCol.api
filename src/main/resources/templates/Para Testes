@@ -1,9 +1,9 @@
 
-http://localhost:8080/medico/cadastro
+http://localhost:8080/swagger-ui/index.html#/
 
 
 
-especialidade é um Enum porra
+especialidade é um Enum
 (
     ORTOPEDIA,
     CARDIOLOGIA,
