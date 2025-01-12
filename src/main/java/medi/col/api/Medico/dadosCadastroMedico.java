@@ -23,6 +23,8 @@ public record dadosCadastroMedico(
     @NotBlank
     String telefone,
 
+    boolean ativo,
+
     @NotNull
     Especialidade especialidade,
 
