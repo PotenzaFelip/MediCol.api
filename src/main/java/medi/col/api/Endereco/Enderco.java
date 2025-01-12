@@ -19,18 +19,29 @@ public class Enderco {
         this.numero=endereco.numero();
     }
     
-    @SuppressWarnings("unused")
+    
     private String logradouro;
-    @SuppressWarnings("unused")
     private String bairro;
-    @SuppressWarnings("unused")
     private String cep;
-    @SuppressWarnings("unused")
     private String numero;
-    @SuppressWarnings("unused")
     private String complemento;
-    @SuppressWarnings("unused")
     private String cidade;
-    @SuppressWarnings("unused")
     private String uf;
+
+    public void atualizarInfosEnd(Enderco endereco) {
+        if(endereco.logradouro !=null)
+            this.logradouro=endereco.logradouro;
+        if(endereco.bairro !=null)
+            this.bairro=endereco.bairro;
+        if(endereco.cep !=null)
+            this.cep=endereco.cep;
+        if(endereco.numero !=null)
+            this.numero=endereco.numero;
+        if(endereco.complemento !=null)
+            this.complemento=endereco.complemento;
+        if(endereco.cidade !=null)
+            this.cidade=endereco.cidade;
+        if(endereco.uf !=null)
+            this.uf=endereco.uf;
+    }
 }

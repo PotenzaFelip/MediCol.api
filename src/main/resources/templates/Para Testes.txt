@@ -1,8 +1,8 @@
-
+//=========\\ URL swagger //=========\\
 http://localhost:8080/swagger-ui/index.html#/
 
 
-
+//=========\\ CADASTRO //=========\\
 especialidade é um Enum
 (
     ORTOPEDIA,
@@ -10,6 +10,7 @@ especialidade é um Enum
     GINEOCOLOGIA,
     DERMATOLOGIA;
 )
+
 Email e DRM são unique
 
 {
@@ -27,4 +28,12 @@ Email e DRM são unique
     "numero": "1",
     "complemento": "complemento"
     }
+}
+//=========\\ Atualizar //=========\\
+
+{
+  "id": 0,
+  "nome": "string",
+  "telefone": "string",
+  "endereoco": {}
 }

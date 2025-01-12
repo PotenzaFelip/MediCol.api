@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @Controller
-// @RequestMapping("/api")
 public class apiController {
     
     @GetMapping("/index")

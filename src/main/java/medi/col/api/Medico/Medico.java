@@ -26,6 +26,7 @@ public class Medico {
         this.email=dados.email();
         this.crm=dados.crm();
         this.telefone=dados.telefone();
+        this.ativo=true;
         this.especialidade=dados.especialidade();
         this.endereco=new Enderco(dados.endereco());
     }
@@ -36,11 +37,27 @@ public class Medico {
     private String email;
     private String crm;
     private String telefone;
+    private Boolean ativo;
 
     @Enumerated(EnumType.STRING)
     private Especialidade especialidade;
 
     @Embedded
     private Enderco endereco;
+
+    public void atualizarInfos(DadosAtualizar dados) {
+
+        if(dados.nome() !=null )
+            this.nome=dados.nome();
+        if(dados.telefone() !=null )
+            this.telefone=dados.telefone();
+        if(dados.endereoco()!=null)
+            this.endereco.atualizarInfosEnd(dados.endereoco());
+    }
+
+    public void Excluir() {
+
+        this.ativo=false;
+    }
 
 }
