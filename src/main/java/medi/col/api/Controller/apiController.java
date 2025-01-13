@@ -33,10 +33,6 @@ public class apiController {
     public String updatemedicos() {
         return "updatemedicos";
     }
-    @GetMapping("/delmedicos")
-    public String delmedicos() {
-        return "delmedicos";
-    }
     
 
 }
