@@ -22,21 +22,22 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import medi.col.api.Medico.DadosAtualizar;
-import medi.col.api.Medico.DadosListMedico;
-import medi.col.api.Medico.Medico;
-import medi.col.api.Medico.MedicoRepository;
-import medi.col.api.Medico.dadosCadastroMedico;
+import medi.col.api.Paciente.DadosAtualizarPacientes;
+import medi.col.api.Paciente.DadosListPaciente;
+import medi.col.api.Paciente.Paciente;
+import medi.col.api.Paciente.PacienteRepository;
+import medi.col.api.Paciente.dadosCadastroPaciente;
+
 
 
 
 @RestController
-@RequestMapping("/medico")
-public class MedicoController {
+@RequestMapping("/paciente")
+public class PacienteController {
 
     @Autowired
-    private MedicoRepository repository;
-    
+    private PacienteRepository repository;
+
     @PostMapping("cadastro")
     @Transactional
     @Operation(summary = "CadastroMedico",
@@ -45,19 +46,18 @@ public class MedicoController {
                 @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
                 @ApiResponse(responseCode = "400", description = "Requisição inválida")
             })
-    public ResponseEntity<Object> cadasrtoMedico(@RequestBody @Valid dadosCadastroMedico Dados) {
+    public ResponseEntity<Object> Cadpaciente(@RequestBody @Valid dadosCadastroPaciente dados) {
         try{
-        repository.save(new Medico(Dados));
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-            Map.of("success", true, "message", "Cadastro realizado com sucesso")
-        );
+            repository.save(new Paciente(dados));
+            return ResponseEntity.ok().build();
         }
         catch(Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                Map.of("success", false, "message", "Erro ao cadastrar médico")
-            );
+                Map.of("success", false, "message", "Erro ao cadastrar Paciente"));
         }
+        
     }
+
     @GetMapping("buscar")
     @Operation(summary = "GetMedicos",
     description = "Buscar Medicos",
@@ -65,11 +65,10 @@ public class MedicoController {
         @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida")
     })
-    public ResponseEntity<Page<DadosListMedico>> GetMedicos(@PageableDefault(size=3,page=0,sort="nome")Pageable paginacao) {
-        var page = repository.findAllByAtivoTrue(paginacao).map(DadosListMedico::new);
+    public ResponseEntity<Page<DadosListPaciente>> GetPaciente(@PageableDefault(size=3,page=0,sort="nome")Pageable paginacao) {
+        var page= repository.findAllByAtivoTrue(paginacao).map(DadosListPaciente::new);
         return ResponseEntity.ok(page);
     }
-
     @GetMapping("buscar/{id}")
     @Operation(summary = "GetMedicos",
     description = "Buscar Medicos",
@@ -77,41 +76,52 @@ public class MedicoController {
         @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida")
     })
-    public ResponseEntity<DadosListMedico> GetMedicosByid(@PathVariable long id) {
-        Optional<Medico> medicOptional=repository.findById(id);
-        if(medicOptional.isPresent())
-            return ResponseEntity.ok(new DadosListMedico(medicOptional.get()));
+    public ResponseEntity<DadosListPaciente> GetPacienteById(@PathVariable long id) {
+        Optional<Paciente> PaciOptional = repository.findById(id);
+        if(PaciOptional.isPresent())
+            return ResponseEntity.ok(new DadosListPaciente(PaciOptional.get()));
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
     
     @PutMapping("atualizar")
     @Transactional
-    @Operation(summary = "Atualizar Medico",
-            description = "Atualuizar Medico",
-            responses = {
-                @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
-                @ApiResponse(responseCode = "400", description = "Requisição inválida")
-            })
-    public ResponseEntity<Object> atualizarmedico(@RequestBody @Valid DadosAtualizar dados) {
-        var medico=repository.getReferenceById(dados.id());
-        medico.atualizarInfos(dados);
-        return ResponseEntity.ok().build();
-
+    @Operation(summary = "GetMedicos",
+    description = "Buscar Medicos",
+    responses = {
+        @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
+        @ApiResponse(responseCode = "400", description = "Requisição inválida")
+    })
+    public ResponseEntity<Object> AtualizarPaciente(@RequestBody @Valid DadosAtualizarPacientes dados) {
+        try{
+            var paciente=repository.getReferenceById(dados.id());
+            paciente.AtualizarPaciente(dados);
+        
+            return ResponseEntity.ok(dados);
+        }
+        catch(Exception e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
-    
+
     @DeleteMapping("Delete/{id}")
     @Transactional
-    @Operation(summary = "Deletar Medico",
-            description = "Deletar Medico",
-            responses = {
-                @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
-                @ApiResponse(responseCode = "400", description = "Requisição inválida")
-            })
-    public ResponseEntity<Object> deletarMedico(@PathVariable Long id){
-        var medico=repository.getReferenceById(id);
-        medico.Excluir();
-        return ResponseEntity.noContent().build();
+    @Operation(summary = "GetMedicos",
+    description = "Buscar Medicos",
+    responses = {
+        @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
+        @ApiResponse(responseCode = "400", description = "Requisição inválida")
+    })
+    public ResponseEntity<Object> DelPaciente(@PathVariable long id){
+        try{
+            var paciente=repository.getReferenceById(id);
+            paciente.Excluir();
+            return ResponseEntity.ok().build();
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
+    
     
 }
