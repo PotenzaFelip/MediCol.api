@@ -1,16 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listar Médicos</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-    <a href="/medicos" class="back-button">Voltar para a Página Inicial</a>
+    <header class="header">
+        <div class="header-content">
+            <h1>Listar Médicos</h1>
+            <nav class="navbar">
+            </nav>
+        </div>
+    </header>
+    <a href="/medicos" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+    </a>
     <div class="content">
-        <h1>Listar Médicos</h1>
-        <button id="listarMedicos" class="button">Carregar Médicos</button>
+        <button id="listarMedicos" class="button">
+            <i class="fas fa-sync-alt"></i>
+        </button>
 
         <div id="medicosList" class="json-response"></div>
 
@@ -30,7 +43,9 @@
     </div>
 
     <div id="notification" class="alert"></div>
-
+    <footer class="footer">
+        <p>&copy; 2025 Gestão de Médicos. Todos os direitos reservados.</p>
+    </footer>
     <script>
         let currentPage = 0;
         const pageSize = 3;
@@ -38,7 +53,7 @@
 
         function fetchMedicos(page) {
             const url = `http://localhost:8080/medico/buscar?page=${page}&size=${pageSize}`;
-            
+
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -59,17 +74,17 @@
                             <button class="update-button" data-id="${medico.id}">Atualizar</button>
                             <button class="delete-button" data-id="${medico.id}">Deletar</button>
                         `;
-                        
+
                         medicosList.appendChild(medicoBox);
 
                         const updateButton = medicoBox.querySelector('.update-button');
-                        updateButton.addEventListener('click', function() {
+                        updateButton.addEventListener('click', function () {
                             const medicoId = this.getAttribute('data-id');
                             window.location.href = `http://localhost:8080/updatemedicos?id=${medicoId}`;
                         });
 
                         const deleteButton = medicoBox.querySelector('.delete-button');
-                        deleteButton.addEventListener('click', function() {
+                        deleteButton.addEventListener('click', function () {
                             medicoIdToDelete = this.getAttribute('data-id');
                             document.getElementById('confirmMessage').textContent = `Tem certeza que deseja excluir o médico com ID ${medicoIdToDelete}?`;
                             document.getElementById('confirmModal').style.display = 'flex';
@@ -89,20 +104,20 @@
             nextButton.disabled = currentPage === data.totalPages - 1;
         }
 
-        document.getElementById('confirmDelete').addEventListener('click', function() {
+        document.getElementById('confirmDelete').addEventListener('click', function () {
             fetch(`http://localhost:8080/medico/Delete/${medicoIdToDelete}`, {
                 method: 'DELETE'
             })
-            .then(response => {
-                if (response.ok) {
-                    showNotification('Médico deletado com sucesso!', 'success');
-                    fetchMedicos(currentPage);
-                    closeModal();
-                } else {
-                    showNotification('Erro ao deletar o médico.', 'error');
-                }
-            })
-            .catch(error => console.error('Erro ao tentar deletar o médico:', error));
+                .then(response => {
+                    if (response.ok) {
+                        showNotification('Médico deletado com sucesso!', 'success');
+                        fetchMedicos(currentPage);
+                        closeModal();
+                    } else {
+                        showNotification('Erro ao deletar o médico.', 'error');
+                    }
+                })
+                .catch(error => console.error('Erro ao tentar deletar o médico:', error));
         });
 
         document.getElementById('closeModal').addEventListener('click', closeModal);
@@ -141,4 +156,5 @@
         fetchMedicos(currentPage);
     </script>
 </body>
+
 </html>
