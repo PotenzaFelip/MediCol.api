@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atualizar Médico</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         .notification {
             position: fixed;
@@ -24,11 +26,19 @@
         }
     </style>
 </head>
-<body>
-    <a href="/medicos" class="back-button">Voltar para a Página Inicial</a>
-    <div class="content">
-        <h1>Atualizar Médico</h1>
 
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Atualizar Médico</h1>
+            <nav class="navbar">
+            </nav>
+        </div>
+    </header>
+    <a href="/listamedicos" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div class="content">
 
         <form id="updateMedicoForm">
             <input type="hidden" id="id" name="id">
@@ -64,12 +74,14 @@
     <div id="notification" class="notification">
         <span id="notification-message"></span>
     </div>
-
+    <footer class="footer">
+        <p>&copy; 2025 Gestão de Médicos. Todos os direitos reservados.</p>
+    </footer>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
 
-        window.onload = function() {
+        window.onload = function () {
             fetch(`http://localhost:8080/medico/buscar/${id}`)
                 .then(response => response.json())
                 .then(data => {
@@ -86,9 +98,9 @@
                 });
         };
 
-        document.getElementById('updateMedicoForm').addEventListener('submit', function(event) {
+        document.getElementById('updateMedicoForm').addEventListener('submit', function (event) {
             event.preventDefault();
-            
+
             const medicoAtualizado = {
                 id: document.getElementById('id').value,
                 nome: document.getElementById('nome').value,
@@ -105,16 +117,16 @@
                 },
                 body: JSON.stringify(medicoAtualizado)
             })
-            .then(response => {
-                if (response.ok) {
-                    showNotification('Médico atualizado com sucesso!', false);
-                } else {
+                .then(response => {
+                    if (response.ok) {
+                        showNotification('Médico atualizado com sucesso!', false);
+                    } else {
+                        showNotification('Erro ao atualizar médico', true);
+                    }
+                })
+                .catch(error => {
                     showNotification('Erro ao atualizar médico', true);
-                }
-            })
-            .catch(error => {
-                showNotification('Erro ao atualizar médico', true);
-            });
+                });
         });
 
         function showNotification(message, isError) {
@@ -135,4 +147,5 @@
         }
     </script>
 </body>
+
 </html>
