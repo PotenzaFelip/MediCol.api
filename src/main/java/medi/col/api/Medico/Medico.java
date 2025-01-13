@@ -49,10 +49,17 @@ public class Medico {
 
         if(dados.nome() !=null )
             this.nome=dados.nome();
+        if(dados.email()!=null)
+            this.email=dados.email();
+        if(dados.crm()!=null)
+            this.crm=dados.crm();
+        if(dados.especialidade()!=null)
+            this.especialidade=dados.especialidade();
         if(dados.telefone() !=null )
             this.telefone=dados.telefone();
-        if(dados.endereoco()!=null)
-            this.endereco.atualizarInfosEnd(dados.endereoco());
+        // if(dados.endereoco()!=null)
+        //     this.endereco.atualizarInfosEnd(dados.endereoco());
+
     }
 
     public void Excluir() {
