@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listar Médicos</title>
+    <title>Listar Médicos ou Pacientes</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -12,20 +12,18 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <h1>Listar Médicos</h1>
-            <nav class="navbar">
-            </nav>
+            <h1>Listar Médicos ou Pacientes</h1>
         </div>
     </header>
-    <a href="/medicos" class="back-button">
+    <a href="/" class="back-button">
         <i class="fas fa-arrow-left"></i>
     </a>
     <div class="content">
-        <button id="listarMedicos" class="button">
+        <button id="listar" class="button">
             <i class="fas fa-sync-alt"></i>
         </button>
 
-        <div id="medicosList" class="json-response"></div>
+        <div id="list" class="json-response"></div>
 
         <div id="pagination" class="pagination">
             <button id="prevPage" class="button" disabled>Anterior</button>
@@ -36,7 +34,7 @@
     <div id="confirmModal" class="modal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
-            <p id="confirmMessage">Tem certeza que deseja excluir este médico?</p>
+            <p id="confirmMessage">Tem certeza que deseja excluir este item?</p>
             <button id="confirmDelete" class="button confirm-button">Confirmar</button>
             <button id="cancelDelete" class="button cancel-button">Cancelar</button>
         </div>
@@ -44,116 +42,106 @@
 
     <div id="notification" class="alert"></div>
     <footer class="footer">
-        <p>&copy; 2025 Gestão de Médicos. Todos os direitos reservados.</p>
+        <p>&copy; 2025 Gestão de Médicos ou Pacientes. Todos os direitos reservados.</p>
     </footer>
     <script>
         let currentPage = 0;
-        const pageSize = 3;
-        let medicoIdToDelete = null;
+        let itemIdToDelete = null;
 
-        function fetchMedicos(page) {
-            const url = `http://localhost:8080/medico/buscar?page=${page}&size=${pageSize}`;
+        // Função para pegar o parâmetro da URL (origem=pacientes ou origem=medicos)
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        const origem = getUrlParameter('origem') === 'pacientes' ? 'paciente' : 'medico';
+
+        // Função para carregar os dados de médicos ou pacientes
+        function fetchData(page) {
+            const url = `http://localhost:8080/${origem}/buscar?page=${page}&size=3`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    const medicosList = document.getElementById('medicosList');
-                    const pagination = document.getElementById('pagination');
-                    medicosList.innerHTML = '';
+                    const list = document.getElementById('list');
+                    list.innerHTML = '';  // Limpa a lista antes de popular os itens
 
-                    data.content.forEach(medico => {
-                        const medicoBox = document.createElement('div');
-                        medicoBox.classList.add('medico-box');
-                        medicoBox.style.position = 'relative';
-
-                        medicoBox.innerHTML = `
-                            <p><strong>Nome:</strong> ${medico.nome}</p>
-                            <p><strong>Email:</strong> ${medico.email}</p>
-                            <p><strong>CRM:</strong> ${medico.crm}</p>
-                            <p><strong>Especialidade:</strong> ${medico.especialidade}</p>
-                            <button class="update-button" data-id="${medico.id}">Atualizar</button>
-                            <button class="delete-button" data-id="${medico.id}">Deletar</button>
+                    data.content.forEach(item => {
+                        const itemBox = document.createElement('div');
+                        itemBox.classList.add('item-box');
+                        itemBox.innerHTML = `
+                            <div class="item-data">
+                                <p><strong>Nome:</strong> ${item.nome}</p>
+                                <p><strong>Email:</strong> ${item.email}</p>
+                                ${item.crm ? `<p><strong>CRM:</strong> ${item.crm}</p>` : ''}
+                                ${item.especialidade ? `<p><strong>Especialidade:</strong> ${item.especialidade}</p>` : ''}
+                            </div>
                         `;
-
-                        medicosList.appendChild(medicoBox);
-
-                        const updateButton = medicoBox.querySelector('.update-button');
-                        updateButton.addEventListener('click', function () {
-                            const medicoId = this.getAttribute('data-id');
-                            window.location.href = `http://localhost:8080/updatemedicos?id=${medicoId}`;
-                        });
-
-                        const deleteButton = medicoBox.querySelector('.delete-button');
-                        deleteButton.addEventListener('click', function () {
-                            medicoIdToDelete = this.getAttribute('data-id');
-                            document.getElementById('confirmMessage').textContent = `Tem certeza que deseja excluir o médico com ID ${medicoIdToDelete}?`;
-                            document.getElementById('confirmModal').style.display = 'flex';
-                        });
+                        list.appendChild(itemBox);
                     });
 
                     updatePagination(data);
                 })
-                .catch(error => console.error('Erro ao buscar médicos:', error));
+                .catch(error => console.error(`Erro ao buscar ${origem}s:`, error));
         }
 
+        // Função para atualizar a paginação
         function updatePagination(data) {
-            const prevButton = document.getElementById('prevPage');
-            const nextButton = document.getElementById('nextPage');
-
-            prevButton.disabled = currentPage === 0;
-            nextButton.disabled = currentPage === data.totalPages - 1;
+            document.getElementById('prevPage').disabled = currentPage === 0;
+            document.getElementById('nextPage').disabled = currentPage === data.totalPages - 1;
         }
 
-        document.getElementById('confirmDelete').addEventListener('click', function () {
-            fetch(`http://localhost:8080/medico/Delete/${medicoIdToDelete}`, {
-                method: 'DELETE'
-            })
-                .then(response => {
-                    if (response.ok) {
-                        showNotification('Médico deletado com sucesso!', 'success');
-                        fetchMedicos(currentPage);
-                        closeModal();
-                    } else {
-                        showNotification('Erro ao deletar o médico.', 'error');
-                    }
-                })
-                .catch(error => console.error('Erro ao tentar deletar o médico:', error));
-        });
-
-        document.getElementById('closeModal').addEventListener('click', closeModal);
-        document.getElementById('cancelDelete').addEventListener('click', closeModal);
-
+        // Função para fechar o modal
         function closeModal() {
             document.getElementById('confirmModal').style.display = 'none';
         }
 
+        // Função para exibir a notificação
         function showNotification(message, type) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.className = `alert alert-${type}`;
             notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+            setTimeout(() => notification.classList.remove('show'), 3000);
         }
 
-        document.getElementById('listarMedicos').addEventListener('click', function () {
-            fetchMedicos(currentPage);
+        // Evento para confirmar a exclusão
+        document.getElementById('confirmDelete').addEventListener('click', () => {
+            fetch(`http://localhost:8080/${origem}/Delete/${itemIdToDelete}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        showNotification(`${origem === 'paciente' ? 'Paciente' : 'Médico'} deletado com sucesso!`, 'success');
+                        fetchData(currentPage);
+                        closeModal();
+                    } else {
+                        showNotification(`Erro ao deletar o ${origem === 'paciente' ? 'paciente' : 'médico'}.`, 'error');
+                    }
+                })
+                .catch(error => console.error(`Erro ao tentar deletar o ${origem === 'paciente' ? 'paciente' : 'médico'}:`, error));
         });
 
-        document.getElementById('prevPage').addEventListener('click', function () {
+        // Evento para fechar o modal
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        document.getElementById('cancelDelete').addEventListener('click', closeModal);
+
+        // Evento para listar os médicos ou pacientes
+        document.getElementById('listar').addEventListener('click', () => fetchData(currentPage));
+
+        // Evento para navegar pelas páginas
+        document.getElementById('prevPage').addEventListener('click', () => {
             if (currentPage > 0) {
                 currentPage--;
-                fetchMedicos(currentPage);
+                fetchData(currentPage);
             }
         });
 
-        document.getElementById('nextPage').addEventListener('click', function () {
+        document.getElementById('nextPage').addEventListener('click', () => {
             currentPage++;
-            fetchMedicos(currentPage);
+            fetchData(currentPage);
         });
 
-        fetchMedicos(currentPage);
+        // Carregar os dados da página inicial
+        fetchData(currentPage);
     </script>
 </body>
 
