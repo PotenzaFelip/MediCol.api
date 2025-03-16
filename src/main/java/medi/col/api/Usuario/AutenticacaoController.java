@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
+import medi.col.api.Infra.Security.DadosTokenJWT;
+import medi.col.api.Infra.Security.TokenService;
 
 
 @RestController
@@ -23,15 +25,18 @@ public class AutenticacaoController {
     private AuthenticationManager manager;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenService TokenService;
     
     @SuppressWarnings("rawtypes")
     @PostMapping
     public ResponseEntity efetuarLogin(@RequestBody @Valid dadosAutenticacao dados){
+
         try {
             var token = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
             var authentication = manager.authenticate(token);  // Autenticação do usuário
-            
-            return ResponseEntity.ok("Autenticação bem-sucedida");
+            var jwtToken = TokenService.gerarToken((Usuario)authentication.getPrincipal());
+            return ResponseEntity.ok(new DadosTokenJWT(jwtToken));
         } catch (BadCredentialsException e) {
             // Se as credenciais estiverem incorretas
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
