@@ -3,7 +3,6 @@ package medi.col.api.Infra.Security;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import medi.col.api.Usuario.Usuario;
 
 
@@ -33,6 +34,23 @@ public class TokenService {
             return token;
         } catch (JWTCreationException exception){
             throw new RuntimeException("Erro ao Gerar Token",exception);
+        }
+    }
+
+     public String VerifyToken(HttpServletRequest request){
+        try {
+            String token = request.getHeader("Authorization").substring(7);
+            if(token==null)
+                throw new RuntimeException("Erro ao Validar Token");
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                      .withIssuer("API Medicol")
+                      .build()
+                      .verify(token)
+                      .getSubject();
+        }
+        catch (JWTVerificationException exception){
+                throw new RuntimeException("Erro ao Validar/Expirado Token",exception);
         }
     }
 
