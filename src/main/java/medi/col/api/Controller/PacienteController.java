@@ -42,8 +42,8 @@ public class PacienteController {
 
     @PostMapping("cadastro")
     @Transactional
-    @Operation(summary = "CadastroMedico",
-            description = "Cadastrar medico",
+    @Operation(summary = "CadastroPaciente",
+            description = "Cadastrar Paciente",
             responses = {
                 @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
                 @ApiResponse(responseCode = "400", description = "Requisição inválida")
@@ -61,8 +61,8 @@ public class PacienteController {
     }
 
     @GetMapping("buscar")
-    @Operation(summary = "GetMedicos",
-    description = "Buscar Medicos",
+    @Operation(summary = "GetPacientes",
+    description = "Buscar Pacientes",
     responses = {
         @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida")
@@ -72,8 +72,8 @@ public class PacienteController {
         return ResponseEntity.ok(page);
     }
     @GetMapping("buscar/{id}")
-    @Operation(summary = "GetMedicos",
-    description = "Buscar Medicos",
+    @Operation(summary = "GetPacientes",
+    description = "Buscar Pacientes",
     responses = {
         @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida")
@@ -88,8 +88,8 @@ public class PacienteController {
     
     @PutMapping("atualizar")
     @Transactional
-    @Operation(summary = "GetMedicos",
-    description = "Buscar Medicos",
+    @Operation(summary = "GetPacientes",
+    description = "Buscar Pacientes",
     responses = {
         @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida")
@@ -108,8 +108,8 @@ public class PacienteController {
 
     @DeleteMapping("Delete/{id}")
     @Transactional
-    @Operation(summary = "GetMedicos",
-    description = "Buscar Medicos",
+    @Operation(summary = "GetPacientes",
+    description = "Buscar Pacientes",
     responses = {
         @ApiResponse(responseCode = "200", description = "Requisição bem-sucedida"),
         @ApiResponse(responseCode = "400", description = "Requisição inválida")

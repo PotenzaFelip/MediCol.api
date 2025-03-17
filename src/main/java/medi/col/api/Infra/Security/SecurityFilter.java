@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -11,6 +13,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import medi.col.api.Usuario.UsuarioRepository;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -19,24 +22,21 @@ public class SecurityFilter extends OncePerRequestFilter {
     private String secret;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private UsuarioRepository repository;
 
+   
     @SuppressWarnings("null")
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String requestURI = request.getRequestURI();
-
-        if (requestURI.startsWith("/swagger-ui") || 
-            requestURI.startsWith("/v3/api-docs") || 
-            requestURI.startsWith("/login") ||
-            requestURI.startsWith("/swagger-resources")) {
-            filterChain.doFilter(request, response);
-            return;
+        if(request.getHeader("Authorization")!=null){
+            var userName=tokenService.VerifyToken(request);
+            var usuario= repository.findByLogin(userName);
+            var authentication= new UsernamePasswordAuthenticationToken(usuario, null,usuario.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        var userName=tokenService.VerifyToken(request);
-        if(userName!=null)
-            System.out.println(userName);
         filterChain.doFilter(request, response);
     }
 

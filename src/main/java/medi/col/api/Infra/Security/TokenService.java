@@ -40,14 +40,17 @@ public class TokenService {
      public String VerifyToken(HttpServletRequest request){
         try {
             String token = request.getHeader("Authorization").substring(7);
-            if(token==null)
-                throw new RuntimeException("Erro ao Validar Token");
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.require(algorithm)
-                      .withIssuer("API Medicol")
-                      .build()
-                      .verify(token)
-                      .getSubject();
+            if(token!=null)
+                {
+                    Algorithm algorithm = Algorithm.HMAC256(secret);
+                    return JWT.require(algorithm)
+                              .withIssuer("API Medicol")
+                              .build()
+                              .verify(token)
+                              .getSubject();
+                }
+                return null;
+           
         }
         catch (JWTVerificationException exception){
                 throw new RuntimeException("Erro ao Validar/Expirado Token",exception);
